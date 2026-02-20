@@ -11,48 +11,48 @@ export type ProjectItem = {
 
 export const projects: ProjectItem[] = [
   {
-    name: "Terminal Monochrome Portfolio",
+    name: "Prayer Time MacOS",
     description:
-      "A minimal React + TypeScript portfolio with terminal-inspired typography and a custom R3F wireframe field.",
+      "Native macOS prayer-time app focused on simple reminders and lightweight daily usage.",
     links: [
-      { label: "GitHub", url: "https://github.com/furkankaynak" },
+      {
+        label: "GitHub",
+        url: "https://github.com/furkankaynak/prayer-time-macos"
+      },
       { label: "LinkedIn", url: "https://www.linkedin.com/in/furkankaynak/" }
     ]
   },
   {
-    name: "US Stock Analyzer Agent",
+    name: "Bitbucket PR Reviewer MCP",
     description:
-      "Multi-agent system that combines SEC filings, options flow, and sentiment inputs for early opportunity signals.",
+      "TypeScript MCP server for automated pull request review workflows on Bitbucket repositories.",
     links: [
-      { label: "GitHub", url: "https://github.com/furkankaynak" },
-      { label: "Medium", url: "https://medium.com/@furkankaynak.74" }
+      {
+        label: "GitHub",
+        url: "https://github.com/furkankaynak/bitbucket-pr-reviewer-mcp"
+      },
+      { label: "LinkedIn", url: "https://www.linkedin.com/in/furkankaynak/" }
     ]
   },
   {
-    name: "EU Project Research & Writing Agent",
+    name: "React Signal",
     description:
-      "RAG-based assistant for discovering EU funding opportunities and generating structured proposal drafts.",
+      "Experimental signal-based state management approach for React with lightweight reactive patterns.",
     links: [
-      { label: "GitHub", url: "https://github.com/furkankaynak" },
-      { label: "Medium", url: "https://medium.com/@furkankaynak.74" }
+      { label: "GitHub", url: "https://github.com/furkankaynak/react-signal" },
+      {
+        label: "Medium",
+        url: "https://medium.com/@furkankaynak.74/unlocking-reacts-potential-with-signals-a-step-by-step-guide-to-implementing-signals-1aa7c4b45553"
+      }
     ]
   },
   {
-    name: "SCADA Real-Time Monitoring",
+    name: "Next Twitter Clone",
     description:
-      "Real-time monitoring and visualization system for national pipelines with high-frequency sensor telemetry.",
+      "Social feed clone built with Next.js and Firebase for realtime interactions and profile flows.",
     links: [
-      { label: "LinkedIn", url: "https://www.linkedin.com/in/furkankaynak/" },
+      { label: "GitHub", url: "https://github.com/furkankaynak/next-twitter-clone" },
       { label: "X", url: "https://x.com/furkannkaynak" }
-    ]
-  },
-  {
-    name: "B2B Travel and Payment Platforms",
-    description:
-      "Frontend architecture and design system contributions for enterprise B2B travel and payment products.",
-    links: [
-      { label: "LinkedIn", url: "https://www.linkedin.com/in/furkankaynak/" },
-      { label: "Medium", url: "https://medium.com/@furkankaynak.74" }
     ]
   }
 ];
