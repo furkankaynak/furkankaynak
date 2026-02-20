@@ -105,15 +105,15 @@ When changing rendering/layout/animation behavior, also run `npm run dev` for ma
 - Components: PascalCase (`HeroScene`, `PortfolioSection`).
 - Component files: PascalCase `.tsx`.
 - Variables/functions: camelCase.
-- Constants: UPPER_SNAKE_CASE (`MOBILE_NODE_LIMIT`).
-- Type names: PascalCase (`ProjectItem`, `NodeState`).
+- Constants: UPPER_SNAKE_CASE (`MOBILE_PHOTON_LIMIT`).
+- Type names: PascalCase (`ProjectItem`, `PhotonState`).
 - CSS classes: kebab-case (`project-grid`, `hero-canvas-fallback`).
 
 ## 11) React and UI Conventions
 - Prefer function components.
 - Prefer named exports for reusable components.
 - Default exports are acceptable for lazy-loaded modules.
-- Keep rendering declarative; isolate heavy imperative logic (see `WireframeField`).
+- Keep rendering declarative; isolate heavy imperative logic (see `PhotonWarpField`).
 - Use `Suspense` fallbacks for lazy-loaded visuals.
 - Maintain accessibility basics:
   - meaningful `aria-label` usage
@@ -122,7 +122,7 @@ When changing rendering/layout/animation behavior, also run `npm run dev` for ma
 ## 12) Animation and Performance Conventions
 - Keep content readability first; animation is secondary.
 - Preserve reduced-motion support (`prefers-reduced-motion`).
-- Respect mobile/desktop performance caps (node and segment limits).
+- Respect mobile/desktop performance caps (photon and segment limits).
 - Avoid expensive allocations inside frame loops.
 - Reuse memoized typed arrays/buffers when possible.
 

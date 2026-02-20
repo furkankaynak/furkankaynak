@@ -1,5 +1,5 @@
 import { Canvas } from "@react-three/fiber";
-import { WireframeField } from "./WireframeField";
+import { PhotonWarpField } from "./PhotonWarpField";
 
 export default function HeroScene() {
   return (
@@ -8,7 +8,7 @@ export default function HeroScene() {
       camera={{ position: [0, 0, 10], fov: 54 }}
       gl={{ antialias: true, alpha: true }}
     >
-      <WireframeField />
+      <PhotonWarpField />
     </Canvas>
   );
 }

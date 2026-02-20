@@ -56,7 +56,7 @@ function reseedPhoton(
   photon.shadeBias = randomBetween(0.78, 1.04);
 }
 
-export function WireframeField() {
+export function PhotonWarpField() {
   const { viewport, size } = useThree();
   const linesGeometryRef = useRef<THREE.BufferGeometry>(null);
   const viewportSignatureRef = useRef("");
