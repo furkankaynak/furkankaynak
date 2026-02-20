@@ -1,7 +1,11 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
-import { COSMIC_SPRITES, PIXEL_PALETTE } from "../data/cosmicSprites";
+import {
+  COSMIC_SPRITES,
+  PIXEL_PALETTE,
+  type CosmicSpriteKind,
+} from "../data/cosmicSprites";
 
 type CosmicObjectState = {
   x: number;
@@ -42,15 +46,68 @@ const GALAXY_SPRITE_INDICES = COSMIC_SPRITES.reduce<number[]>((indices, sprite, 
   return indices;
 }, []);
 
+const COMET_SPRITE_INDICES = COSMIC_SPRITES.reduce<number[]>((indices, sprite, index) => {
+  if (sprite.kind === "comet") {
+    indices.push(index);
+  }
+  return indices;
+}, []);
+
+const BLACK_HOLE_SPRITE_INDICES = COSMIC_SPRITES.reduce<number[]>((indices, sprite, index) => {
+  if (sprite.kind === "black-hole") {
+    indices.push(index);
+  }
+  return indices;
+}, []);
+
+const MOBILE_KIND_SEQUENCE: CosmicSpriteKind[] = ["planet", "galaxy", "comet", "black-hole"];
+const DESKTOP_KIND_SEQUENCE: CosmicSpriteKind[] = [
+  "planet",
+  "galaxy",
+  "planet",
+  "comet",
+  "planet",
+  "black-hole",
+];
+
 function randomBetween(min: number, max: number) {
   return min + Math.random() * (max - min);
 }
 
-function pickSpriteIndex(slotIndex: number) {
-  const pool = slotIndex % 2 === 0 ? PLANET_SPRITE_INDICES : GALAXY_SPRITE_INDICES;
+function spritePoolForKind(kind: CosmicSpriteKind) {
+  if (kind === "planet") {
+    return PLANET_SPRITE_INDICES;
+  }
+
+  if (kind === "galaxy") {
+    return GALAXY_SPRITE_INDICES;
+  }
+
+  if (kind === "comet") {
+    return COMET_SPRITE_INDICES;
+  }
+
+  return BLACK_HOLE_SPRITE_INDICES;
+}
+
+function pickSpriteIndex(slotIndex: number, slotCount: number) {
+  const kindSequence = slotCount <= MOBILE_OBJECT_LIMIT ? MOBILE_KIND_SEQUENCE : DESKTOP_KIND_SEQUENCE;
+  const preferredKind = kindSequence[slotIndex % kindSequence.length];
+  const pool = spritePoolForKind(preferredKind);
 
   if (pool.length === 0) {
-    return 0;
+    const fallbackPool = [
+      ...PLANET_SPRITE_INDICES,
+      ...GALAXY_SPRITE_INDICES,
+      ...COMET_SPRITE_INDICES,
+      ...BLACK_HOLE_SPRITE_INDICES,
+    ];
+
+    if (fallbackPool.length === 0) {
+      return 0;
+    }
+
+    return fallbackPool[Math.floor(Math.random() * fallbackPool.length)];
   }
 
   return pool[Math.floor(Math.random() * pool.length)];
@@ -107,7 +164,7 @@ function reseedCosmicObject(
   const radialMix = Math.pow(Math.random(), 0.32);
   const radius =
     CENTER_CORRIDOR_RADIUS + radialMix * (OUTER_CORRIDOR_RADIUS - CENTER_CORRIDOR_RADIUS);
-  const spriteIndex = pickSpriteIndex(slotIndex);
+  const spriteIndex = pickSpriteIndex(slotIndex, slotCount);
   const sprite = COSMIC_SPRITES[spriteIndex];
   const [minScale, maxScale] = sprite.baseScale;
 
@@ -127,7 +184,13 @@ function reseedCosmicObject(
   cosmicObject.spriteIndex = spriteIndex;
   cosmicObject.spin = randomBetween(0, Math.PI * 2);
   cosmicObject.spinSpeed =
-    sprite.kind === "galaxy" ? randomBetween(-0.32, 0.32) : randomBetween(-0.14, 0.14);
+    sprite.kind === "galaxy"
+      ? randomBetween(-0.32, 0.32)
+      : sprite.kind === "black-hole"
+        ? randomBetween(-0.26, 0.26)
+        : sprite.kind === "comet"
+          ? randomBetween(-0.08, 0.08)
+          : randomBetween(-0.14, 0.14);
   cosmicObject.pointTwinkle = randomBetween(0, Math.PI * 2);
 }
 
@@ -272,8 +335,22 @@ export function CosmicObjectsField() {
       const twinkle = 0.68 + Math.sin(cosmicObject.pointTwinkle + elapsedTime * 3.1) * 0.32;
       const sprite = COSMIC_SPRITES[cosmicObject.spriteIndex];
       const spriteTexture = spriteTextures[cosmicObject.spriteIndex];
-      const pointBoost = sprite.kind === "galaxy" ? 1.25 : 1;
-      const spriteBoost = sprite.kind === "galaxy" ? 1.15 : 1;
+      const pointBoost =
+        sprite.kind === "galaxy"
+          ? 1.25
+          : sprite.kind === "black-hole"
+            ? 1.3
+            : sprite.kind === "comet"
+              ? 1.12
+              : 1;
+      const spriteBoost =
+        sprite.kind === "galaxy"
+          ? 1.15
+          : sprite.kind === "black-hole"
+            ? 1.18
+            : sprite.kind === "comet"
+              ? 1.06
+              : 1;
 
       const point = pointRefs.current[i];
       if (point) {
