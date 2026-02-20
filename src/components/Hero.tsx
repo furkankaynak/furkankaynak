@@ -30,7 +30,7 @@ export function Hero() {
         </Suspense>
       </div>
 
-      <div className="hero-content terminal-frame">
+      <div className="hero-content">
         <p className="terminal-label">$ whoami</p>
         <h1>Furkan Kaynak</h1>
         <p className="hero-title">Full Stack Software Developer</p>
