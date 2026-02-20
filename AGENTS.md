@@ -11,8 +11,8 @@ This file is the operational source of truth for local agent behavior.
   - `src/main.tsx`
   - `src/App.tsx`
 - Main feature areas:
-  - `src/components/` (UI + 3D scene)
-  - `src/data/` (portfolio content)
+  - `src/components/` (UI + 3D scene, photon warp, cosmic objects)
+  - `src/data/` (portfolio content + pixel sprite blueprints)
   - `src/styles.css` (global styles)
 - TypeScript strict mode is enabled.
 
@@ -123,6 +123,7 @@ When changing rendering/layout/animation behavior, also run `npm run dev` for ma
 - Keep content readability first; animation is secondary.
 - Preserve reduced-motion support (`prefers-reduced-motion`).
 - Respect mobile/desktop performance caps (photon and segment limits).
+- Cosmic object limits currently target mobile `4` / desktop `6`.
 - Avoid expensive allocations inside frame loops.
 - Reuse memoized typed arrays/buffers when possible.
 
@@ -134,6 +135,7 @@ When changing rendering/layout/animation behavior, also run `npm run dev` for ma
 
 ## 14) Data and Content Patterns
 - Keep portfolio content in `src/data/projects.ts`.
+- Keep pixel sprite definitions in `src/data/cosmicSprites.ts`.
 - Keep data typed and shape-consistent.
 - Use stable, domain-meaningful keys when mapping lists.
 - External links should use `target="_blank"` + `rel="noreferrer"`.

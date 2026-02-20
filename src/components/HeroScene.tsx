@@ -1,4 +1,5 @@
 import { Canvas } from "@react-three/fiber";
+import { CosmicObjectsField } from "./CosmicObjectsField";
 import { PhotonWarpField } from "./PhotonWarpField";
 
 export default function HeroScene() {
@@ -9,6 +10,7 @@ export default function HeroScene() {
       gl={{ antialias: true, alpha: true }}
     >
       <PhotonWarpField />
+      <CosmicObjectsField />
     </Canvas>
   );
 }
