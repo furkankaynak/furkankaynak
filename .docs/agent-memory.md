@@ -83,3 +83,9 @@
   - **Tradeoff:** Enterprise projects without public repos still need alternate presentation.
   - **Lesson:** Mixing public OSS links and article links is better than generic profile redirects.
   - **Next action:** Add private-enterprise case-study pages as public-safe summaries.
+
+- **Decision:** Pin `main` and `develop` to baseline commit and continue work on `feature/*`.
+  - **Reason:** Preserve strict `feature -> develop -> main` flow with explicit branch ancestry.
+  - **Tradeoff:** Initial setup adds one-time branch maintenance overhead.
+  - **Lesson:** Setting branch pointers early avoids confusing first PR diffs.
+  - **Next action:** Merge this feature branch into `develop` through PR after remote setup.

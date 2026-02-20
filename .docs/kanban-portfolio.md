@@ -45,6 +45,7 @@
 - [x] Add lazy-loaded hero scene split for initial bundle reduction
 - [x] Run QA commands (`npm run check`, `npm run build`)
 - [x] Initialize git flow branches (`main`, `develop`, `feature/portfolio-foundation`)
+- [x] Align `main` and `develop` to baseline commit for clean branch flow
 - [x] Replace generic profile links with project-specific GitHub/Medium URLs
 
 ## Execution Queue (Next)
