@@ -6,25 +6,29 @@ type PhotonState = {
   x: number;
   y: number;
   z: number;
+  angle: number;
+  radius: number;
+  angularSpeed: number;
   speed: number;
   baseLength: number;
   twinkle: number;
-  driftX: number;
-  driftY: number;
   shadeBias: number;
 };
 
-const DESKTOP_PHOTON_LIMIT = 1400;
-const MOBILE_PHOTON_LIMIT = 760;
+const DESKTOP_PHOTON_LIMIT = 2000;
+const MOBILE_PHOTON_LIMIT = 1000;
 const FAR_DEPTH = 96;
 const NEAR_DEPTH = 8.5;
-const DESKTOP_MIN_SPEED = 28;
-const DESKTOP_MAX_SPEED = 72;
-const MOBILE_MIN_SPEED = 22;
-const MOBILE_MAX_SPEED = 56;
-const TUNNEL_RADIUS = 1.32;
-const CENTER_CORRIDOR_RADIUS = 0.2;
-const DRIFT_SCALE = 0.14;
+const DESKTOP_MIN_SPEED = 22;
+const DESKTOP_MAX_SPEED = 55;
+const MOBILE_MIN_SPEED = 18;
+const MOBILE_MAX_SPEED = 42;
+const TUNNEL_RADIUS = 1.45;
+const CENTER_CORRIDOR_RADIUS = 0.08;
+const MIN_ANGULAR_SPEED = 0.4;
+const MAX_ANGULAR_SPEED = 1.0;
+const RADIAL_EXPANSION_STRENGTH = 0.45;
+const TANGENT_STREAK_WEIGHT = 0.25;
 
 function randomBetween(min: number, max: number) {
   return min + Math.random() * (max - min);
@@ -32,34 +36,35 @@ function randomBetween(min: number, max: number) {
 
 function reseedPhoton(
   photon: PhotonState,
-  halfWidth: number,
-  halfHeight: number,
   minSpeed: number,
   maxSpeed: number,
   fillDepth: boolean
 ) {
   const angle = randomBetween(0, Math.PI * 2);
-  const radialMix = Math.pow(Math.random(), 0.46);
+  const radialMix = Math.pow(Math.random(), 0.7);
   const radius =
     CENTER_CORRIDOR_RADIUS + radialMix * (TUNNEL_RADIUS - CENTER_CORRIDOR_RADIUS);
 
-  photon.x = Math.cos(angle) * halfWidth * radius;
-  photon.y = Math.sin(angle) * halfHeight * radius;
+  photon.angle = angle;
+  photon.radius = radius;
+  photon.x = 0;
+  photon.y = 0;
   photon.z = fillDepth
     ? randomBetween(-FAR_DEPTH, NEAR_DEPTH)
     : randomBetween(-FAR_DEPTH - 18, -FAR_DEPTH + 6);
   photon.speed = randomBetween(minSpeed, maxSpeed);
-  photon.baseLength = randomBetween(0.45, 1.55);
+  photon.baseLength = randomBetween(0.4, 1.4);
   photon.twinkle = randomBetween(0, Math.PI * 2);
-  photon.driftX = photon.x * DRIFT_SCALE * 0.01;
-  photon.driftY = photon.y * DRIFT_SCALE * 0.01;
   photon.shadeBias = randomBetween(0.78, 1.04);
+
+  const baseAngular = randomBetween(MIN_ANGULAR_SPEED, MAX_ANGULAR_SPEED);
+  const normalizedRadius = (radius - CENTER_CORRIDOR_RADIUS) / (TUNNEL_RADIUS - CENTER_CORRIDOR_RADIUS);
+  photon.angularSpeed = baseAngular * (1 + (1 - normalizedRadius) * 1.2);
 }
 
 export function PhotonWarpField() {
   const { viewport, size } = useThree();
   const linesGeometryRef = useRef<THREE.BufferGeometry>(null);
-  const viewportSignatureRef = useRef("");
   const lowFpsBudgetRef = useRef(0);
   const initializedRef = useRef(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
@@ -75,11 +80,12 @@ export function PhotonWarpField() {
       x: 0,
       y: 0,
       z: 0,
+      angle: 0,
+      radius: 0,
+      angularSpeed: 0,
       speed: 0,
       baseLength: 0,
       twinkle: 0,
-      driftX: 0,
-      driftY: 0,
       shadeBias: 1
     }));
     initializedRef.current = false;
@@ -104,6 +110,8 @@ export function PhotonWarpField() {
   }, []);
 
   useFrame(({ clock }, delta) => {
+    delta = Math.min(delta, 1 / 30);
+
     if (prefersReducedMotion) {
       lowFpsBudgetRef.current += delta;
       if (lowFpsBudgetRef.current < 1 / 12) {
@@ -115,23 +123,12 @@ export function PhotonWarpField() {
 
     const halfWidth = viewport.width * 0.5;
     const halfHeight = viewport.height * 0.5;
-    const viewportSignature = `${Math.round(halfWidth * 100)}:${Math.round(
-      halfHeight * 100
-    )}:${photonLimit}`;
 
-    if (!initializedRef.current || viewportSignatureRef.current !== viewportSignature) {
+    if (!initializedRef.current) {
       for (let i = 0; i < photonsRef.current.length; i += 1) {
-        reseedPhoton(
-          photonsRef.current[i],
-          halfWidth,
-          halfHeight,
-          minSpeed,
-          maxSpeed,
-          true
-        );
+        reseedPhoton(photonsRef.current[i], minSpeed, maxSpeed, true);
       }
       initializedRef.current = true;
-      viewportSignatureRef.current = viewportSignature;
     }
 
     const elapsedTime = clock.elapsedTime;
@@ -144,15 +141,10 @@ export function PhotonWarpField() {
       const photon = photonsRef.current[i];
 
       photon.z += photon.speed * delta * motionScale;
-      photon.x += photon.driftX * delta;
-      photon.y += photon.driftY * delta;
+      photon.angle += photon.angularSpeed * delta * motionScale;
 
-      if (
-        photon.z > NEAR_DEPTH ||
-        Math.abs(photon.x) > halfWidth * TUNNEL_RADIUS * 1.2 ||
-        Math.abs(photon.y) > halfHeight * TUNNEL_RADIUS * 1.2
-      ) {
-        reseedPhoton(photon, halfWidth, halfHeight, minSpeed, maxSpeed, false);
+      if (photon.z > NEAR_DEPTH) {
+        reseedPhoton(photon, minSpeed, maxSpeed, false);
       }
 
       const depthProgress = THREE.MathUtils.clamp(
@@ -160,17 +152,29 @@ export function PhotonWarpField() {
         0,
         1
       );
+
+      const radialExpansion =
+        1 + depthProgress * depthProgress * RADIAL_EXPANSION_STRENGTH;
+      const effectiveRadius = photon.radius * radialExpansion;
+
+      photon.x = Math.cos(photon.angle) * effectiveRadius * halfWidth;
+      photon.y = Math.sin(photon.angle) * effectiveRadius * halfHeight;
+
       const pulse = 0.72 + Math.sin(photon.twinkle + elapsedTime * 2.5) * 0.28;
       const intensity = (0.16 + depthProgress * 0.84) * pulse;
       const headShade = Math.max(0.03, 1 - intensity * photon.shadeBias);
       const tailShade = Math.min(1, headShade + 0.2 + (1 - depthProgress) * 0.16);
-      const streakLength = photon.baseLength * (0.5 + depthProgress * 4);
+      const streakLength = photon.baseLength * (0.5 + depthProgress * 3.5);
+
+      const tangentX = -Math.sin(photon.angle) * effectiveRadius * halfWidth;
+      const tangentY = Math.cos(photon.angle) * effectiveRadius * halfHeight;
+      const tangentLen = Math.sqrt(tangentX * tangentX + tangentY * tangentY) || 1;
 
       linePositions[i * 6] = photon.x;
       linePositions[i * 6 + 1] = photon.y;
       linePositions[i * 6 + 2] = photon.z;
-      linePositions[i * 6 + 3] = photon.x - photon.driftX * streakLength * 0.24;
-      linePositions[i * 6 + 4] = photon.y - photon.driftY * streakLength * 0.24;
+      linePositions[i * 6 + 3] = photon.x - (tangentX / tangentLen) * streakLength * TANGENT_STREAK_WEIGHT;
+      linePositions[i * 6 + 4] = photon.y - (tangentY / tangentLen) * streakLength * TANGENT_STREAK_WEIGHT;
       linePositions[i * 6 + 5] = photon.z - streakLength;
 
       lineColors[i * 6] = headShade;

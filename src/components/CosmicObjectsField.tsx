@@ -196,7 +196,6 @@ function reseedCosmicObject(
 
 export function CosmicObjectsField() {
   const { viewport, size } = useThree();
-  const viewportSignatureRef = useRef("");
   const initializedRef = useRef(false);
   const lowFpsBudgetRef = useRef(0);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
@@ -256,6 +255,8 @@ export function CosmicObjectsField() {
   }, []);
 
   useFrame(({ clock }, delta) => {
+    delta = Math.min(delta, 1 / 30);
+
     if (prefersReducedMotion) {
       lowFpsBudgetRef.current += delta;
       if (lowFpsBudgetRef.current < 1 / 14) {
@@ -267,11 +268,8 @@ export function CosmicObjectsField() {
 
     const halfWidth = viewport.width * 0.5;
     const halfHeight = viewport.height * 0.5;
-    const viewportSignature = `${Math.round(halfWidth * 100)}:${Math.round(
-      halfHeight * 100
-    )}:${objectLimit}`;
 
-    if (!initializedRef.current || viewportSignatureRef.current !== viewportSignature) {
+    if (!initializedRef.current) {
       for (let i = 0; i < cosmicObjectsRef.current.length; i += 1) {
         reseedCosmicObject(
           cosmicObjectsRef.current[i],
@@ -285,7 +283,6 @@ export function CosmicObjectsField() {
         );
       }
       initializedRef.current = true;
-      viewportSignatureRef.current = viewportSignature;
     }
 
     const elapsedTime = clock.elapsedTime;
