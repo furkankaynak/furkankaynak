@@ -77,3 +77,9 @@
   - **Tradeoff:** Slightly more process overhead for small changes.
   - **Lesson:** Early workflow structure prevents branching confusion later.
   - **Next action:** Keep all implementation commits on `feature/*` and merge via `develop`.
+
+- **Decision:** Replace portfolio placeholders with direct project-specific links.
+  - **Reason:** Improve credibility and reduce click friction for recruiters.
+  - **Tradeoff:** Enterprise projects without public repos still need alternate presentation.
+  - **Lesson:** Mixing public OSS links and article links is better than generic profile redirects.
+  - **Next action:** Add private-enterprise case-study pages as public-safe summaries.

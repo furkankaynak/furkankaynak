@@ -13,7 +13,7 @@
 
 - [ ] Add simple project tags (tech stack) if needed in next iteration
 - [ ] Add lightweight analytics event tracking (optional)
-- [ ] Replace profile-level project links with dedicated repo/live URLs when available
+- [ ] Add dedicated case-study pages for enterprise work that cannot expose private repos
 
 ## Todo
 
@@ -45,6 +45,7 @@
 - [x] Add lazy-loaded hero scene split for initial bundle reduction
 - [x] Run QA commands (`npm run check`, `npm run build`)
 - [x] Initialize git flow branches (`main`, `develop`, `feature/portfolio-foundation`)
+- [x] Replace generic profile links with project-specific GitHub/Medium URLs
 
 ## Execution Queue (Next)
 
