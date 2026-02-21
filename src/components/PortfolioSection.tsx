@@ -88,7 +88,12 @@ export function PortfolioSection() {
         <div className="project-grid" ref={gridRef}>
           {projects.map((project) => (
             <article className="project-card terminal-frame" key={project.name}>
-              <h3>{project.name}</h3>
+              <div className="project-title-row">
+                <h3>{project.name}</h3>
+                {project.badge ? (
+                  <span className="project-badge">{project.badge}</span>
+                ) : null}
+              </div>
               <p>{project.description}</p>
               <div className="project-links">
                 {project.links.map((link) => (
