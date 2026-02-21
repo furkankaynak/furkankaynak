@@ -1,4 +1,3 @@
-import { ThemeToggle } from "./ThemeToggle";
 import { useHeroScrollTrigger } from "../hooks/useHeroScrollTrigger";
 
 const SOCIAL_LINKS = [
@@ -36,7 +35,6 @@ export function Hero() {
               {link.label}
             </a>
           ))}
-          <ThemeToggle />
         </nav>
       </div>
     </header>
