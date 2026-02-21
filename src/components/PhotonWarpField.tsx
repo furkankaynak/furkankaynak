@@ -1,7 +1,7 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
-import { useColorScheme } from "../hooks/useColorScheme";
+import { useTheme } from "../context/ThemeContext";
 
 type PhotonState = {
   x: number;
@@ -69,8 +69,8 @@ export function PhotonWarpField() {
   const lowFpsBudgetRef = useRef(0);
   const initializedRef = useRef(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === "dark";
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   const isMobile = size.width < 768;
   const photonLimit = isMobile ? MOBILE_PHOTON_LIMIT : DESKTOP_PHOTON_LIMIT;
