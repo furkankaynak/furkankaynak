@@ -2,6 +2,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { useTheme } from "../context/ThemeContext";
+import { scrollProgressRef } from "../context/scrollRef";
 
 type PhotonState = {
   x: number;
@@ -143,8 +144,9 @@ export function PhotonWarpField() {
     for (let i = 0; i < activeCount; i += 1) {
       const photon = photonsRef.current[i];
 
-      photon.z += photon.speed * delta * motionScale;
-      photon.angle += photon.angularSpeed * delta * motionScale;
+      const warpBoost = 1 + scrollProgressRef.current * 2.5;
+      photon.z += photon.speed * delta * motionScale * warpBoost;
+      photon.angle += photon.angularSpeed * delta * motionScale * warpBoost;
 
       if (photon.z > NEAR_DEPTH) {
         reseedPhoton(photon, minSpeed, maxSpeed, false);

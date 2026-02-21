@@ -6,6 +6,7 @@ import {
   PIXEL_PALETTE,
   type CosmicSpriteKind,
 } from "../data/cosmicSprites";
+import { scrollProgressRef } from "../context/scrollRef";
 
 type CosmicObjectState = {
   x: number;
@@ -300,7 +301,8 @@ export function CosmicObjectsField() {
       );
 
       const distanceSlowdown = 0.18 + depthProgress * depthProgress * 1.12;
-      cosmicObject.z += cosmicObject.speed * delta * motionScale * distanceSlowdown;
+      const rushBoost = 1 + scrollProgressRef.current * 1.8;
+      cosmicObject.z += cosmicObject.speed * delta * motionScale * distanceSlowdown * rushBoost;
       cosmicObject.x += cosmicObject.driftX * delta * (0.32 + depthProgress * 0.5);
       cosmicObject.y += cosmicObject.driftY * delta * (0.32 + depthProgress * 0.5);
       cosmicObject.spin += cosmicObject.spinSpeed * delta * (0.25 + depthProgress * 0.9);

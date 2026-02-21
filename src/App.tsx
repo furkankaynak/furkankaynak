@@ -1,12 +1,16 @@
+import { BackgroundCanvas } from "./components/BackgroundCanvas";
 import { Hero } from "./components/Hero";
 import { PortfolioSection } from "./components/PortfolioSection";
 
 function App() {
   return (
-    <div className="app-shell">
-      <Hero />
-      <PortfolioSection />
-    </div>
+    <>
+      <BackgroundCanvas />
+      <div className="app-shell">
+        <Hero />
+        <PortfolioSection />
+      </div>
+    </>
   );
 }
 
