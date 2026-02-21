@@ -1,6 +1,7 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
+import { useColorScheme } from "../hooks/useColorScheme";
 
 type PhotonState = {
   x: number;
@@ -68,6 +69,8 @@ export function PhotonWarpField() {
   const lowFpsBudgetRef = useRef(0);
   const initializedRef = useRef(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === "dark";
 
   const isMobile = size.width < 768;
   const photonLimit = isMobile ? MOBILE_PHOTON_LIMIT : DESKTOP_PHOTON_LIMIT;
@@ -162,8 +165,12 @@ export function PhotonWarpField() {
 
       const pulse = 0.72 + Math.sin(photon.twinkle + elapsedTime * 2.5) * 0.28;
       const intensity = (0.16 + depthProgress * 0.84) * pulse;
-      const headShade = Math.max(0.03, 1 - intensity * photon.shadeBias);
-      const tailShade = Math.min(1, headShade + 0.2 + (1 - depthProgress) * 0.16);
+      const headShade = isDark
+        ? Math.min(0.97, intensity * photon.shadeBias)
+        : Math.max(0.03, 1 - intensity * photon.shadeBias);
+      const tailShade = isDark
+        ? Math.max(0, headShade - 0.2 - (1 - depthProgress) * 0.16)
+        : Math.min(1, headShade + 0.2 + (1 - depthProgress) * 0.16);
       const streakLength = photon.baseLength * (0.5 + depthProgress * 3.5);
 
       const tangentX = -Math.sin(photon.angle) * effectiveRadius * halfWidth;
@@ -193,12 +200,13 @@ export function PhotonWarpField() {
       linePositions[i * 6 + 4] = 0;
       linePositions[i * 6 + 5] = -FAR_DEPTH;
 
-      lineColors[i * 6] = 1;
-      lineColors[i * 6 + 1] = 1;
-      lineColors[i * 6 + 2] = 1;
-      lineColors[i * 6 + 3] = 1;
-      lineColors[i * 6 + 4] = 1;
-      lineColors[i * 6 + 5] = 1;
+      const hiddenShade = isDark ? 0 : 1;
+      lineColors[i * 6] = hiddenShade;
+      lineColors[i * 6 + 1] = hiddenShade;
+      lineColors[i * 6 + 2] = hiddenShade;
+      lineColors[i * 6 + 3] = hiddenShade;
+      lineColors[i * 6 + 4] = hiddenShade;
+      lineColors[i * 6 + 5] = hiddenShade;
     }
 
     if (linesGeometryRef.current) {

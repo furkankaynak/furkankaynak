@@ -34,6 +34,21 @@ Single-page portfolio built with Vite 7 + React 19 + TypeScript 5 (strict). The 
 
 **Styling:** Plain CSS in `src/styles.css` with CSS variables (`--bg`, `--fg`, `--muted`, `--line`). Monochrome terminal aesthetic using Share Tech Mono / VT323 fonts. No Tailwind, no CSS-in-JS.
 
+## Git Flow
+
+**Never push directly to `main`.** Follow this branching strategy:
+
+```
+feature/*  ─┐
+fix/*      ─┤──▶  develop  ──▶  main
+chore/*    ─┘
+```
+
+1. Create a branch from `develop` (e.g. `feature/dark-mode`, `fix/shade-bug`, `chore/update-deps`)
+2. Commit and push to that branch
+3. Merge into `develop`
+4. Merge `develop` into `main` for releases
+
 ## Key Patterns
 
 - **Frame loop performance:** Both animation components clamp delta, use memoized typed arrays, and skip allocations inside `useFrame`. Mobile has lower particle/object caps. `prefers-reduced-motion` throttles frame rate and halves active particle count.
