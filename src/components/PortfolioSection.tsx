@@ -1,16 +1,42 @@
 import { useEffect, useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { projects } from "../data/projects";
-import { useScrollProgress } from "../context/ScrollProgressContext";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export function PortfolioSection() {
-  const { scrollY } = useScrollProgress();
+  const sectionRef = useRef<HTMLElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
 
-  const parallaxOffset = Math.max(0, 40 - scrollY * 0.06);
-  const sectionStyle: React.CSSProperties = {
-    transform: `translateY(${parallaxOffset}px)`,
-    willChange: "transform",
-  };
+  useGSAP(
+    () => {
+      const section = sectionRef.current;
+      if (!section) return;
+
+      const prefersReduced = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+      if (prefersReduced) return;
+
+      gsap.fromTo(
+        section,
+        { y: 40 },
+        {
+          y: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top bottom",
+            end: "top 60%",
+            scrub: true,
+          },
+        }
+      );
+    },
+    { scope: sectionRef }
+  );
 
   useEffect(() => {
     const grid = gridRef.current;
@@ -52,7 +78,7 @@ export function PortfolioSection() {
   }, []);
 
   return (
-    <main className="portfolio" id="portfolio" style={sectionStyle}>
+    <main className="portfolio" id="portfolio" ref={sectionRef}>
       <div className="container">
         <div className="section-heading">
           <p className="terminal-label">$ ls ./portfolio</p>
