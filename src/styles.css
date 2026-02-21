@@ -47,7 +47,16 @@ a {
 }
 
 .app-shell {
+  position: relative;
+  z-index: 1;
   min-height: 100vh;
+}
+
+.background-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .hero {
@@ -56,22 +65,10 @@ a {
   display: grid;
   place-items: center;
   padding: 2rem;
-  overflow: hidden;
-}
-
-.hero-canvas {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-
-.hero-canvas-fallback {
-  position: absolute;
-  inset: 0;
-  background: var(--bg);
 }
 
 .hero-content {
+  will-change: transform, opacity;
   position: relative;
   z-index: 1;
   max-width: 840px;
@@ -229,6 +226,39 @@ a {
 
 .project-links a:hover {
   border-color: var(--line-strong);
+}
+
+.card-hidden {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.card-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-hidden {
+    opacity: 1;
+    transform: none;
+  }
+
+  .card-visible {
+    transition: none;
+  }
+
+  .portfolio {
+    transform: none !important;
+    will-change: auto !important;
+  }
+
+  .hero-content {
+    transform: none !important;
+    opacity: 1 !important;
+    will-change: auto !important;
+  }
 }
 
 @media (max-width: 768px) {
