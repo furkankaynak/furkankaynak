@@ -1,4 +1,5 @@
 import { Suspense, lazy } from "react";
+import { ThemeToggle } from "./ThemeToggle";
 
 const HeroScene = lazy(() => import("./HeroScene"));
 
@@ -41,6 +42,7 @@ export function Hero() {
               {link.label}
             </a>
           ))}
+          <ThemeToggle />
         </nav>
       </div>
     </header>
