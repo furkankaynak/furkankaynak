@@ -7,6 +7,7 @@ export type ProjectItem = {
   name: string;
   description: string;
   links: ProjectLink[];
+  badge?: "AI Assisted Coded";
 };
 
 export const projects: ProjectItem[] = [
@@ -14,6 +15,7 @@ export const projects: ProjectItem[] = [
     name: "Prayer Time MacOS",
     description:
       "Native macOS prayer-time app focused on simple reminders and lightweight daily usage.",
+    badge: "AI Assisted Coded",
     links: [
       {
         label: "GitHub",
@@ -26,6 +28,7 @@ export const projects: ProjectItem[] = [
     name: "Saskatchewan Task",
     description:
       "Service marketplace web app inspired by TaskRabbit, connecting customers with local helpers for everyday tasks.",
+    badge: "AI Assisted Coded",
     links: [
       {
         label: "Website",
