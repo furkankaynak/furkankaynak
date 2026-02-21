@@ -7,6 +7,23 @@
   --muted: #343434;
   --line: rgba(0, 0, 0, 0.36);
   --line-strong: rgba(0, 0, 0, 0.72);
+  --hover-overlay: rgba(0, 0, 0, 0.1);
+  --shadow-inset: rgba(0, 0, 0, 0.09);
+  --shadow-drop: rgba(0, 0, 0, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #0a0a0a;
+    --fg: #e8e8e8;
+    --muted: #a0a0a0;
+    --line: rgba(255, 255, 255, 0.24);
+    --line-strong: rgba(255, 255, 255, 0.56);
+    --hover-overlay: rgba(255, 255, 255, 0.1);
+    --shadow-inset: rgba(255, 255, 255, 0.05);
+    --shadow-drop: rgba(0, 0, 0, 0.4);
+  }
 }
 
 * {
@@ -22,7 +39,7 @@ body,
 
 body {
   font-family: "Share Tech Mono", "Courier New", monospace;
-  background: #ffffff;
+  background: var(--bg);
   color: var(--fg);
 }
 
@@ -53,7 +70,7 @@ a {
 .hero-canvas-fallback {
   position: absolute;
   inset: 0;
-  background: #ffffff;
+  background: var(--bg);
 }
 
 .hero-content {
@@ -99,7 +116,7 @@ a {
 
 .social-links a:hover {
   border-color: var(--line-strong);
-  background: rgba(0, 0, 0, 0.1);
+  background: var(--hover-overlay);
 }
 
 .social-links a:focus-visible,
@@ -117,10 +134,10 @@ a {
 
 .terminal-frame {
   border: 1px solid var(--line);
-  background: #ffffff;
+  background: var(--bg);
   box-shadow:
-    inset 0 0 0 1px rgba(0, 0, 0, 0.09),
-    0 24px 48px rgba(0, 0, 0, 0.1);
+    inset 0 0 0 1px var(--shadow-inset),
+    0 24px 48px var(--shadow-drop);
 }
 
 .portfolio {
