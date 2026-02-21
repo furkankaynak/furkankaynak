@@ -1,5 +1,5 @@
 export type ProjectLink = {
-  label: "GitHub" | "Medium" | "LinkedIn" | "X";
+  label: "GitHub" | "Medium" | "LinkedIn" | "Website" | "X";
   url: string;
 };
 
@@ -23,15 +23,14 @@ export const projects: ProjectItem[] = [
     ]
   },
   {
-    name: "Bitbucket PR Reviewer MCP",
+    name: "Saskatchewan Task",
     description:
-      "TypeScript MCP server for automated pull request review workflows on Bitbucket repositories.",
+      "Service marketplace web app inspired by TaskRabbit, connecting customers with local helpers for everyday tasks.",
     links: [
       {
-        label: "GitHub",
-        url: "https://github.com/furkankaynak/bitbucket-pr-reviewer-mcp"
-      },
-      { label: "LinkedIn", url: "https://www.linkedin.com/in/furkankaynak/" }
+        label: "Website",
+        url: "https://sasktask-demo.pages.dev/"
+      }
     ]
   },
   {
