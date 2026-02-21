@@ -1,6 +1,18 @@
 @import url("https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap");
 
 :root {
+  color-scheme: dark;
+  --bg: #0a0a0a;
+  --fg: #e8e8e8;
+  --muted: #a0a0a0;
+  --line: rgba(255, 255, 255, 0.24);
+  --line-strong: rgba(255, 255, 255, 0.56);
+  --hover-overlay: rgba(255, 255, 255, 0.1);
+  --shadow-inset: rgba(255, 255, 255, 0.05);
+  --shadow-drop: rgba(0, 0, 0, 0.4);
+}
+
+:root[data-theme="light"] {
   color-scheme: light;
   --bg: #ffffff;
   --fg: #050505;
@@ -10,20 +22,6 @@
   --hover-overlay: rgba(0, 0, 0, 0.1);
   --shadow-inset: rgba(0, 0, 0, 0.09);
   --shadow-drop: rgba(0, 0, 0, 0.1);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-    --bg: #0a0a0a;
-    --fg: #e8e8e8;
-    --muted: #a0a0a0;
-    --line: rgba(255, 255, 255, 0.24);
-    --line-strong: rgba(255, 255, 255, 0.56);
-    --hover-overlay: rgba(255, 255, 255, 0.1);
-    --shadow-inset: rgba(255, 255, 255, 0.05);
-    --shadow-drop: rgba(0, 0, 0, 0.4);
-  }
 }
 
 * {
@@ -120,9 +118,39 @@ a {
 }
 
 .social-links a:focus-visible,
-.project-links a:focus-visible {
+.project-links a:focus-visible,
+.theme-toggle:focus-visible {
   outline: 1px solid var(--fg);
   outline-offset: 2px;
+}
+
+.theme-toggle {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--fg);
+  padding: 0.45rem 0.6rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  font-family: inherit;
+}
+
+.theme-toggle:hover {
+  border-color: var(--line-strong);
+  background: var(--hover-overlay);
+}
+
+.theme-toggle svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .terminal-label {
@@ -213,7 +241,8 @@ a {
   }
 
   .social-links a,
-  .project-links a {
+  .project-links a,
+  .theme-toggle {
     min-height: 2.25rem;
     display: inline-flex;
     align-items: center;
